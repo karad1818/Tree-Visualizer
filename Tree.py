@@ -1,23 +1,17 @@
-from PyQt5.QtWidgets import QLabel ,QLineEdit , QApplication, QWidget , QDialog, QMainWindow ,QPushButton , QVBoxLayout, QGridLayout
+from PyQt5.QtWidgets import QScrollArea ,QLabel ,QLineEdit , QApplication, QWidget , QDialog, QMainWindow ,QPushButton , QVBoxLayout, QGridLayout
 from PyQt5.QtGui import QIcon, QPainter, QBrush, QPen, QFont
 from PyQt5.QtCore import Qt
 import sys
 import math
 
-class WindowManipulation(QWidget):
+class Painting(QWidget):
     def __init__(self):
+        super().__init__()
         self.data = ""
         self.store = dict()
         self.uniq_id = 0
         self.printHeight = 0
-        super().__init__()
-        self.setGeometry(100,100,600,600) #window size (x,y),(width,height)
-        self.setWindowTitle("Tree Visualizer")
-        self.setWindowIcon(QIcon('tree.jpg'))
-        self.setWindowOpacity(1)
         self.add_input_box()
-
-    
 
     def add_input_box(self):
         l = QLineEdit("",self)
@@ -72,11 +66,13 @@ class WindowManipulation(QWidget):
         list_of_node = self.data.split(',')
         height = math.floor(math.log2(len(list_of_node)))
         self.printHeight = height
-        # print("height : "+str(height))
         queue = []
+        # if height is 2 means max leaf nodes are 1<<h
+        sy = 230
+        sx = (2**self.printHeight)*55
         if len(list_of_node) >= 1 and list_of_node[0] != ' ':
-            draw_circle_text(list_of_node[0],500,200)
-            self.store[self.uniq_id] = [500,200]
+            draw_circle_text(list_of_node[0],sx,sy)
+            self.store[self.uniq_id] = [sx,sy]
             queue = [self.uniq_id]
             self.uniq_id += 1
         level = 0
@@ -104,6 +100,29 @@ class WindowManipulation(QWidget):
                 height -= 1
                 level = 0
                 p *= 2
+
+class WindowManipulation(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setGeometry(100,100,600,600) #window size (x,y),(width,height)
+        self.setWindowTitle("Tree Visualizer")
+        self.setWindowIcon(QIcon('tree.jpg'))
+        self.setWindowOpacity(1)
+
+        widget = QWidget()
+        layout = QVBoxLayout(self)
+        lines = Painting()
+        layout.addWidget(lines)
+        widget.setLayout(layout)
+
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(False)
+        scroll.setWidget(widget)
+        widget.resize(20000, 2000)
+        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        vLayout = QVBoxLayout(self)
+        vLayout.addWidget(scroll)
+    
 
 
 if __name__ == "__main__":
