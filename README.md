@@ -8,14 +8,16 @@ More precisely you need to give an input in the form of integer list. , it'll gi
 
 To use visualizer you need to install python in your system
 
-'''
+```
 clone this repository
 run jupyter notebook
-'''
+```
 ## used language 
 
-> Python
-> GUI : PyQt5
+``` 
+Python
+GUI : PyQt5
+```
 
 
 ## How visualizer works ?
